@@ -24,7 +24,7 @@ firebase_credentials = {
 # Initialize Firebase Storage Client
 storage_client = storage.Client.from_service_account_json(firebase_credentials)
 
-@app.route('https://finalyear-project-production-8de8.up.railway.app/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def handle_file_upload():
     file = request.files['file']
 
