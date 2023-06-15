@@ -10,19 +10,11 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config['SECRET_KEY'] = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
 
-# Firebase Storage Credentials
-firebase_credentials = {
-    "apiKey": "AIzaSyB_fgH-gqRagjhIRoY6SUaKoxlgyzjPrIk",
-    "authDomain": "file-manager-1169c.firebaseapp.com",
-    "projectId": "file-manager-1169c",
-    "storageBucket": "file-manager-1169c.appspot.com",
-    "messagingSenderId": "627965509307",
-    "appId": "1:627965509307:web:0e4d1eee0cdb5fce1cf39e",
-    "measurementId": "G-50PEMH6L40"
-}
+# Get the path to the service account JSON file
+service_account_path = os.path.join(os.path.dirname(__file__), 'service-account.json')
 
 # Initialize Firebase Storage Client
-storage_client = storage.Client.from_service_account_json(firebase_credentials)
+storage_client = storage.Client.from_service_account_json(service_account_path)
 
 @app.route('/upload', methods=['POST'])
 def handle_file_upload():
@@ -61,14 +53,14 @@ def encrypt_file(file_path):
     return encrypted_file_path
 
 def upload_file_to_storage(file_path, remote_path):
-    bucket_name = firebase_credentials['storageBucket']
+    bucket_name = service_account_path['storageBucket']
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(remote_path)
 
     blob.upload_from_filename(file_path)
 
 def get_download_url(remote_path):
-    bucket_name = firebase_credentials['storageBucket']
+    bucket_name = service_account_path['storageBucket']
     return f"https://storage.googleapis.com/{bucket_name}/{remote_path}"
 
 if __name__ == '__main__':

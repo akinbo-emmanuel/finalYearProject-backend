@@ -1,5 +1,0 @@
-[build]
-runtime = "python-3.9"
-
-[env]
-COMMAND = "python app.py"
